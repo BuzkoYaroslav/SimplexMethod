@@ -24,7 +24,7 @@ namespace SimplexMethod
         public int VarsCount { get { return coefs.Length; } }
 
         public double Function { get { return GetFunction(); } }
-        public double this[int i] { get { return aZero[i]; } }
+        public Tuple<int, double> this[int i] { get { return new Tuple<int, double>(basisIndexes[i], aZero[i]); } }
 
         public SimplexTable(Vector[] vectors, int[] basisIndexes, double[] coefs, Vector conditions) 
         {
@@ -35,6 +35,7 @@ namespace SimplexMethod
             this.basisIndexes = new List<int>();
             for (int i = 0; i < basisIndexes.Length; i++)
                 this.basisIndexes.Add(basisIndexes[i]);
+            this.basisIndexes.Sort();
 
             this.coefs = new double[coefs.Length];
             for (int i = 0; i < coefs.Length; i++)
@@ -261,7 +262,10 @@ namespace SimplexMethod
                 {
                     wrt.WriteLine("Найден оптимум!\nF(X) = {0}", Math.Round(table.Function, 2));
                     for (int i = 0; i < table.BasisLength; i++)
-                        wrt.WriteLine("x{0} = {1}", i, Math.Round(table[i], 2));
+                    {
+                        Tuple<int, double> val = table[i];
+                        wrt.WriteLine("x{0} = {1}", val.Item1, Math.Round(val.Item2, 2));
+                    }
                 }
             }
 
